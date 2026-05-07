@@ -8,9 +8,10 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
 
   return (
-    <div className="p-6 grid grid-cols-3 gap-6">
-      <div className="col-span-2">
+    <main className="grid min-h-0 flex-1 grid-cols-1 gap-4 overflow-hidden p-4 xl:grid-cols-[minmax(0,1fr)_400px]">
+      <div className="min-h-0 min-w-0">
         <UploadPanel
+          image={image}
           setImage={setImage}
           setResult={setResult}
           setLoading={setLoading}
@@ -18,9 +19,9 @@ export default function Dashboard() {
         />
       </div>
 
-      <div className="space-y-6">
+      <div className="min-h-0 min-w-0">
         <ResultsPanel result={result} loading={loading} />
       </div>
-    </div>
+    </main>
   );
 }

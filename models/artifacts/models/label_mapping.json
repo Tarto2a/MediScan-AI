@@ -1,0 +1,22 @@
+{
+  "classes": [
+    "Cancer",
+    "Cardiomegaly",
+    "Effusion",
+    "Mass/Nodule",
+    "Normal",
+    "Other",
+    "Pneumonia",
+    "Pneumothorax"
+  ],
+  "label_to_index": {
+    "Cancer": 0,
+    "Cardiomegaly": 1,
+    "Effusion": 2,
+    "Mass/Nodule": 3,
+    "Normal": 4,
+    "Other": 5,
+    "Pneumonia": 6,
+    "Pneumothorax": 7
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "model_type": "xgboost",
+  "model_artifact": "C:\\Users\\MWG\\Desktop\\DataMainig_Last_dance\\artifacts\\models\\best_tabular_model.joblib",
+  "class_names_artifact": "C:\\Users\\MWG\\Desktop\\DataMainig_Last_dance\\artifacts\\models\\class_names.json",
+  "selected_feature_columns_artifact": "C:\\Users\\MWG\\Desktop\\DataMainig_Last_dance\\artifacts\\models\\selected_feature_columns.json",
+  "feature_prefix": "feature_",
+  "feature_extractor_model_name": "google/vit-large-patch16-224-in21k",
+  "feature_vector_size": 1024,
+  "missing_value_strategy": "native_model_missing_support",
+  "feature_set_mode": "union",
+  "label_mapping": {
+    "Cancer": 0,
+    "Cardiomegaly": 1,
+    "Effusion": 2,
+    "Mass/Nodule": 3,
+    "Normal": 4,
+    "Other": 5,
+    "Pneumonia": 6,
+    "Pneumothorax": 7
+  }
+}

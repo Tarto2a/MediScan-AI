@@ -1,13 +1,19 @@
 export default function Navbar() {
   return (
-    <div className="flex justify-between items-center bg-white p-4 shadow">
-      <h1 className="text-lg font-semibold">Dashboard</h1>
+    <div className="flex items-center justify-between border-b border-slate-200 bg-white px-6 py-4">
+      <div>
+        <h1 className="text-lg font-semibold text-slate-950">Chest Image Analysis</h1>
+        <p className="text-sm text-slate-500">ViT feature extraction with FT-Transformer classification</p>
+      </div>
 
-      <div className="flex items-center gap-4">
-        <button className="bg-teal-600 text-white px-4 py-2 rounded">
-          Upload Medical Image
-        </button>
-        <div className="size-8 rounded-full"><img src="/public/download-removebg-preview.png" alt="" /></div>
+      <div className="flex items-center gap-3">
+        <div className="text-right">
+          <p className="text-sm font-medium text-slate-900">Clinical AI Console</p>
+          <p className="text-xs text-slate-500">Local inference</p>
+        </div>
+        <div className="flex size-10 items-center justify-center rounded-full bg-teal-50 ring-1 ring-teal-100">
+          <img src="/download-removebg-preview.png" alt="" className="size-8 object-contain" />
+        </div>
       </div>
     </div>
   );

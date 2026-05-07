@@ -1,73 +1,73 @@
-# React + TypeScript + Vite
+# Chest Image Analysis Web App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a local clinical AI demo for chest image classification. It lets a user upload a chest X-ray or CT slice, sends the image to a FastAPI backend, extracts ViT image features, and classifies the result with a saved FT-Transformer model.
 
-Currently, two official plugins are available:
+The app returns the predicted class, confidence, top ranked classes, and a ViT attention overlay when available.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Tech Stack
 
-## React Compiler
+- Frontend: React, Vite, Tailwind CSS
+- Backend: FastAPI
+- ML runtime: PyTorch, Transformers, scikit-learn, pandas, Pillow
+- Model pipeline: ViT-Large feature extraction + FT-Transformer classifier
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Main Project Structure
 
-## Expanding the ESLint configuration
+```text
+backend/
+  server.py                 FastAPI API used by the frontend
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+frontend/
+  src/                      React UI
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+models/
+  scripts/                  Inference and model helper code
+  artifacts/models/         Required saved model files
+  artifacts/reports/        Empty runtime/report folder
+  artifacts/plots/          Empty runtime/report folder
+  artifacts/tables/         Empty runtime/report folder
+  training/                 Large training data, reports, and old artifacts
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Required Runtime Model Files
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Keep these files in `models/artifacts/models/`:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- `best_ft_transformer.pth`
+- `ft_preprocessor.joblib`
+- `label_mapping.json`
+- `selected_features.json`
+- `preprocessing_config.json`
+- `inference_config.json`
+
+Without these files, `/predict` cannot run.
+
+## Run The App
+
+Install frontend dependencies if needed:
+
+```bash
+npm install
 ```
+
+Start frontend and backend together:
+
+```bash
+npm start
+```
+
+The root `package.json` runs:
+
+- frontend: `cd frontend && npm run dev`
+- backend: `cd backend && uvicorn server:app --reload`
+
+## API Endpoints
+
+- `GET /model_info` returns model and pipeline metadata
+- `POST /predict` accepts an uploaded image file and returns classification results
+
+## Notes
+
+The `models/training/` folder contains large datasets, generated reports, plots, and training artifacts. It is intentionally ignored by Git.
+
+This project is for research/demo use and should not be used as a real medical diagnosis system without proper clinical validation.

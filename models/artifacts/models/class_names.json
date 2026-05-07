@@ -1,0 +1,12 @@
+{
+  "classes": [
+    "Cancer",
+    "Cardiomegaly",
+    "Effusion",
+    "Mass/Nodule",
+    "Normal",
+    "Other",
+    "Pneumonia",
+    "Pneumothorax"
+  ]
+}

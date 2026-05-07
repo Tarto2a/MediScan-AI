@@ -1,0 +1,40 @@
+{
+  "model_type": "FT-Transformer",
+  "image_root": "C:\\Users\\MWG\\Desktop\\DataMainig_Last_dance\\data",
+  "feature_set_mode": "union",
+  "selected_features_artifact": "C:\\Users\\MWG\\Desktop\\DataMainig_Last_dance\\artifacts\\models\\selected_features.json",
+  "label_mapping_artifact": "C:\\Users\\MWG\\Desktop\\DataMainig_Last_dance\\artifacts\\models\\label_mapping.json",
+  "preprocessor_artifact": "C:\\Users\\MWG\\Desktop\\DataMainig_Last_dance\\artifacts\\models\\ft_preprocessor.joblib",
+  "missing_value_strategy": "median_imputation",
+  "scaling": "standard_scaler",
+  "split_info": {
+    "strategy": "existing",
+    "source": "gold_split_column",
+    "details": {}
+  },
+  "feature_selection_thresholds": {
+    "missing_threshold": 0.35,
+    "near_constant_threshold": 1e-06,
+    "correlation_threshold": 0.95,
+    "mutual_info_threshold": 0.001,
+    "max_selected_features": 512
+  },
+  "model_config": {
+    "hidden_dim": 128,
+    "num_heads": 8,
+    "num_layers": 3,
+    "dropout": 0.15,
+    "batch_size": 128,
+    "learning_rate": 0.0005,
+    "weight_decay": 1e-05,
+    "epochs": 40,
+    "patience": 8,
+    "scheduler": "plateau",
+    "selection_metric": "weighted_f1",
+    "class_weight_mode": "balanced"
+  },
+  "reporting_artifacts": {
+    "plots_root": "C:\\Users\\MWG\\Desktop\\DataMainig_Last_dance\\artifacts\\plots",
+    "tables_root": "C:\\Users\\MWG\\Desktop\\DataMainig_Last_dance\\artifacts\\tables"
+  }
+}

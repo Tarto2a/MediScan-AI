@@ -1,0 +1,57 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+
+# Build outputs
+dist/
+frontend/dist/
+build/
+
+# Python cache and virtual environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+models/logs/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Large training/data artifacts moved out of the runtime path
+models/training/
+models/data/
+models/bronze/
+models/silver/
+models/gold/
+models/gold.zip
+models/raw_image_metadata.csv
+
+# Generated reports and plots
+models/reports/
+models/artifacts/reports/*
+models/artifacts/plots/*
+models/artifacts/tables/*
+!models/artifacts/reports/.gitkeep
+!models/artifacts/plots/.gitkeep
+!models/artifacts/tables/.gitkeep
+
+# Optional large archives
+*.zip
+*.7z
+*.rar
