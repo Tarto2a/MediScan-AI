@@ -5,6 +5,6 @@
     "back": "cd backend && uvicorn server:app --reload"
   },
   "devDependencies": {
-    "concurrently": "^8.2.0"
+    "concurrently": "^8.2.2"
   }
 }

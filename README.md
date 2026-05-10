@@ -23,9 +23,6 @@ frontend/
 models/
   scripts/                  Inference and model helper code
   artifacts/models/         Required saved model files
-  artifacts/reports/        Empty runtime/report folder
-  artifacts/plots/          Empty runtime/report folder
-  artifacts/tables/         Empty runtime/report folder
   training/                 Large training data, reports, and old artifacts
 ```
 
