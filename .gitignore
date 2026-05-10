@@ -55,3 +55,5 @@ models/artifacts/tables/*
 *.zip
 *.7z
 *.rar
+
+.vercel
