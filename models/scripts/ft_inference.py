@@ -12,6 +12,7 @@ import numpy as np
 import pandas as pd
 import torch
 from PIL import Image
+from torch import nn
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
@@ -19,9 +20,60 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from scripts.common import MODELS_ROOT, PROJECT_ROOT as COMMON_PROJECT_ROOT, read_dataframe, resolve_existing_table_path  # noqa: E402
 from scripts.feature_extractor import ViTLargeFeatureExtractor  # noqa: E402
-from scripts.train_ft_transformer import FTTransformerClassifier, artifact_paths  # noqa: E402
 
 DEFAULT_FEATURE_EXTRACTOR_MODEL = "google/vit-large-patch16-224-in21k"
+
+
+class NumericalFeatureTokenizer(nn.Module):
+    def __init__(self, n_features: int, d_token: int) -> None:
+        super().__init__()
+        self.weight = nn.Parameter(torch.empty(n_features, d_token))
+        self.bias = nn.Parameter(torch.zeros(n_features, d_token))
+        nn.init.xavier_uniform_(self.weight)
+
+    def forward(self, inputs: torch.Tensor) -> torch.Tensor:
+        return inputs.unsqueeze(-1) * self.weight.unsqueeze(0) + self.bias.unsqueeze(0)
+
+
+class FTTransformerClassifier(nn.Module):
+    def __init__(
+        self,
+        *,
+        n_features: int,
+        num_classes: int,
+        d_token: int,
+        n_heads: int,
+        n_layers: int,
+        dropout: float,
+    ) -> None:
+        super().__init__()
+        self.tokenizer = NumericalFeatureTokenizer(n_features=n_features, d_token=d_token)
+        self.cls_token = nn.Parameter(torch.zeros(1, 1, d_token))
+        encoder_layer = nn.TransformerEncoderLayer(
+            d_model=d_token,
+            nhead=n_heads,
+            dim_feedforward=d_token * 4,
+            dropout=dropout,
+            activation="gelu",
+            batch_first=True,
+            norm_first=False,
+        )
+        self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=n_layers)
+        self.norm = nn.LayerNorm(d_token)
+        self.head = nn.Sequential(
+            nn.Linear(d_token, d_token),
+            nn.GELU(),
+            nn.Dropout(dropout),
+            nn.Linear(d_token, num_classes),
+        )
+        nn.init.normal_(self.cls_token, std=0.02)
+
+    def forward(self, inputs: torch.Tensor) -> torch.Tensor:
+        tokens = self.tokenizer(inputs)
+        cls = self.cls_token.expand(inputs.size(0), -1, -1)
+        encoded = self.encoder(torch.cat([cls, tokens], dim=1))
+        cls_representation = self.norm(encoded[:, 0])
+        return self.head(cls_representation)
 
 
 @dataclass(frozen=True)
@@ -40,7 +92,13 @@ def load_json(path: Path) -> Dict[str, Any]:
 
 
 def required_artifact_paths() -> Dict[str, Path]:
-    paths = artifact_paths()
+    paths = {
+        "model": MODELS_ROOT / "best_ft_transformer.pth",
+        "label_mapping": MODELS_ROOT / "label_mapping.json",
+        "selected_features": MODELS_ROOT / "selected_features.json",
+        "preprocessing_config": MODELS_ROOT / "preprocessing_config.json",
+        "preprocessor": MODELS_ROOT / "ft_preprocessor.joblib",
+    }
     return {
         "model": paths["model"],
         "label_mapping": paths["label_mapping"],
@@ -92,7 +150,7 @@ def load_runtime_bundle() -> FTInferenceRuntime:
             + "\n".join(missing)
         )
 
-    paths = artifact_paths()
+    paths = required_artifact_paths()
     label_mapping = load_json(paths["label_mapping"])
     selected_features_payload = load_json(paths["selected_features"])
     preprocessing_config = load_json(paths["preprocessing_config"])
